@@ -38,8 +38,8 @@ const run = async () => {
   let factoryFiles;
   let seedFiles;
   try {
-    factoryFiles = await loadEntityFactories(factoryPath);
-    seedFiles = await loadSeeds(seedsPath);
+    // factoryFiles = await loadEntityFactories(factoryPath);
+    // seedFiles = await loadSeeds(seedsPath);
   } catch (error) {
     return handleError(error);
   }

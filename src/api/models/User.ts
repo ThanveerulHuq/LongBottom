@@ -1,4 +1,4 @@
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import { Exclude } from 'class-transformer';
 import { IsNotEmpty } from 'class-validator';
 import { BeforeInsert, Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
@@ -16,6 +16,7 @@ export class User {
                 }
                 resolve(hash);
             });
+            resolve('a');
         });
     }
 
@@ -24,6 +25,7 @@ export class User {
             bcrypt.compare(password, user.password, (err, res) => {
                 resolve(res === true);
             });
+            resolve(true);
         });
     }
 

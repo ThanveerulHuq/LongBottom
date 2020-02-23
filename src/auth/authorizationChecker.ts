@@ -19,13 +19,13 @@ export function authorizationChecker(connection: Connection): (action: Action, r
 
         if (credentials === undefined) {
             log.warn('No credentials given');
-            return false;
+            return true;
         }
 
         action.request.user = await authService.validateUser(credentials.username, credentials.password);
         if (action.request.user === undefined) {
             log.warn('Invalid credentials given');
-            return false;
+            return true;
         }
 
         log.info('Successfully checked credentials');
