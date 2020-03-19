@@ -1,25 +1,21 @@
 import * as bcrypt from 'bcryptjs';
 import { Exclude } from 'class-transformer';
 import { IsNotEmpty } from 'class-validator';
-import { BeforeInsert, Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
+import {  Column, Entity, PrimaryColumn } from 'typeorm';
 
-import { Pet } from './Pet';
-
-@Entity()
+@Entity({ name: 'users' })
 export class User {
-
-    public static hashPassword(password: string): Promise<string> {
-        return new Promise((resolve, reject) => {
-            bcrypt.hash(password, 10, (err, hash) => {
-                if (err) {
-                    return reject(err);
-                }
-                resolve(hash);
-            });
-            resolve('a');
-        });
-    }
-
+    // public static hashPassword(password: string): Promise<string> {
+    //     return new Promise((resolve, reject) => {
+    //         bcrypt.hash(password, 10, (err, hash) => {
+    //             if (err) {
+    //                 return reject(err);
+    //             }
+    //             resolve(hash);
+    //         });
+    //         resolve('a');
+    //     });
+    // }
     public static comparePassword(user: User, password: string): Promise<boolean> {
         return new Promise((resolve, reject) => {
             bcrypt.compare(password, user.password, (err, res) => {
@@ -33,36 +29,21 @@ export class User {
     public id: string;
 
     @IsNotEmpty()
-    @Column({ name: 'first_name' })
-    public firstName: string;
-
-    @IsNotEmpty()
-    @Column({ name: 'last_name' })
-    public lastName: string;
-
-    @IsNotEmpty()
-    @Column()
-    public email: string;
+    @Column({ name: 'user_name' })
+    public userName: string;
 
     @IsNotEmpty()
     @Column()
     @Exclude()
     public password: string;
 
-    @IsNotEmpty()
-    @Column()
-    public username: string;
-
-    @OneToMany(type => Pet, pet => pet.user)
-    public pets: Pet[];
-
     public toString(): string {
-        return `${this.firstName} ${this.lastName} (${this.email})`;
+        return `${this.userName})`;
     }
 
-    @BeforeInsert()
-    public async hashPassword(): Promise<void> {
-        this.password = await User.hashPassword(this.password);
-    }
+    // @BeforeInsert()
+    // public async hashPassword(): Promise<void> {
+    //     this.password = await User.hashPassword(this.password);
+    // }
 
 }

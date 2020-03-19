@@ -1,5 +1,4 @@
-import { Type } from 'class-transformer';
-import { IsEmail, IsNotEmpty, IsUUID, ValidateNested } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsUUID } from 'class-validator';
 import {
     Authorized, Body, Delete, Get, JsonController, OnUndefined, Param, Post, Put, Req
 } from 'routing-controllers';
@@ -8,7 +7,6 @@ import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
 import { UserNotFoundError } from '../errors/UserNotFoundError';
 import { User } from '../models/User';
 import { UserService } from '../services/UserService';
-import { PetResponse } from './PetController';
 
 class BaseUser {
     @IsNotEmpty()
@@ -28,10 +26,6 @@ class BaseUser {
 export class UserResponse extends BaseUser {
     @IsUUID()
     public id: string;
-
-    @ValidateNested({ each: true })
-    @Type(() => PetResponse)
-    public pets: PetResponse[];
 }
 
 class CreateUserBody extends BaseUser {
@@ -71,11 +65,8 @@ export class UserController {
     @ResponseSchema(UserResponse)
     public create(@Body() body: CreateUserBody): Promise<User> {
         const user = new User();
-        user.email = body.email;
-        user.firstName = body.firstName;
-        user.lastName = body.lastName;
         user.password = body.password;
-        user.username = body.username;
+        user.userName = body.username;
 
         return this.userService.create(user);
     }
@@ -84,10 +75,7 @@ export class UserController {
     @ResponseSchema(UserResponse)
     public update(@Param('id') id: string, @Body() body: BaseUser): Promise<User> {
         const user = new User();
-        user.email = body.email;
-        user.firstName = body.firstName;
-        user.lastName = body.lastName;
-        user.username = body.username;
+        user.userName = body.username;
 
         return this.userService.update(id, user);
     }
