@@ -5,4 +5,3 @@ import { Groups } from '../models/Groups';
 export class GroupsRepository extends Repository<Groups>  {
 
 }
-

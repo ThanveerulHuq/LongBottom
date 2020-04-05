@@ -79,7 +79,7 @@
         ],
         "class-name": true,
         "curly": true,
-        "eofline": true,
+
         "jsdoc-format": true,
         "member-access": true,
         "no-arg": true,
@@ -106,16 +106,6 @@
             true,
             "allow-null-check"
         ],
-        "typedef-whitespace": [
-            true,
-            {
-                "call-signature": "nospace",
-                "index-signature": "nospace",
-                "parameter": "nospace",
-                "property-declaration": "nospace",
-                "variable-declaration": "nospace"
-            }
-        ],
         "variable-name": false,
         "whitespace": [
             true,
@@ -127,3 +117,14 @@
         ]
     }
 }
+ // "typedef-whitespace": [
+        //     true,
+        //     {
+        //         "call-signature": "nospace",
+        //         "index-signature": "nospace",
+        //         "parameter": "nospace",
+        //         "property-declaration": "nospace",
+        //         "variable-declaration": "nospace"
+        //     }
+        // ],
+        // "eofline": true,

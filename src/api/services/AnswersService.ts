@@ -18,14 +18,15 @@ export class AnswersService {
         @Logger(__filename) private log: LoggerInterface
     ) { }
 
-    public async submitAnswers(answers: any[]): Promise<any> {
+    public async submitAnswers(body: any): Promise<any> {
         this.log.info('@submitAnswers Service');
-        answers = answers.map(({ id, option }) => ({ question: id, option, student: 2 }));
+        let { answers, student } = body;
+        answers = answers.map(({ id, option }) => ({ question: id, option, student }));
         const insertResult = await this.answersRepo.insertAnswers(answers);
         if (insertResult.raw.serverStatus === 2) {
             const traits: any[] = await this.calculateTraitPercentage(answers);
-            this.studentResultRepo.insertStudentResult({ ...traits, student: 2 });
-            return traits;
+            this.studentResultRepo.insertStudentResult({ ...traits, student });
+            return this.getTraitsSorted(traits);
         } else {
             return '';
         }
@@ -59,5 +60,15 @@ export class AnswersService {
             }
         }
         return traitsPercentage;
+    }
+
+    getTraitsSorted(traitsPercentage: any) {
+        const traitsArray = []
+        for (let trait in traitsPercentage) {
+            traitsArray.push({ trait: trait, value: traitsPercentage[trait] });
+        }
+        return traitsArray.sort((traitA, traitB) => {
+            return traitB.value - traitA.value;
+        });
     }
 }
