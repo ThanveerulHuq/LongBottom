@@ -6,6 +6,7 @@ import { QuestionRepository } from '../repositories/QuestionRepository';
 import { TraitsPercentage } from '../types/traits';
 import { SkillsetService } from './SkillsetService';
 import { StudentResultRepository } from '../repositories/StudentResultRepo';
+import { CareerWeightageRepository } from '../repositories/CareerWeightageRepository';
 
 @Service()
 export class AnswersService {
@@ -14,6 +15,7 @@ export class AnswersService {
         @OrmRepository() private answersRepo: AnswersRepository,
         @OrmRepository() private questionsRepo: QuestionRepository,
         @OrmRepository() private studentResultRepo: StudentResultRepository,
+        @OrmRepository() private careerWeightageRepo: CareerWeightageRepository,
         private skillsetService: SkillsetService,
         @Logger(__filename) private log: LoggerInterface
     ) { }
@@ -22,12 +24,14 @@ export class AnswersService {
         this.log.info('@submitAnswers Service');
         let { answers, student } = body;
         answers = answers.map(({ id, option }) => ({ question: id, option, student }));
-        const insertResult = await this.answersRepo.insertAnswers(answers);
-        if (insertResult.raw.serverStatus === 2) {
-            const traits: any[] = await this.calculateTraitPercentage(answers);
-            this.studentResultRepo.insertStudentResult({ ...traits, student });
-            return this.getTraitsSorted(traits);
-        } else {
+        try {
+            await this.answersRepo.insertAnswers(answers);
+            const traitsPercentage: any[] = await this.calculateTraitPercentage(answers);
+            this.studentResultRepo.insertStudentResult({ ...traitsPercentage, student });
+            let traits = this.getTraitsSorted(traitsPercentage);
+            let careers = await this.getRecommendedCareers(traitsPercentage);
+            return { traits, careers };
+        } catch{
             return '';
         }
     }
@@ -63,6 +67,7 @@ export class AnswersService {
     }
 
     getTraitsSorted(traitsPercentage: any) {
+        console.log(traitsPercentage)
         const traitsArray = []
         for (let trait in traitsPercentage) {
             traitsArray.push({ trait: trait, value: traitsPercentage[trait] });
@@ -70,5 +75,12 @@ export class AnswersService {
         return traitsArray.sort((traitA, traitB) => {
             return traitB.value - traitA.value;
         });
+    }
+
+    async getRecommendedCareers(traits: any) {
+        for (let trait in traits) {
+            traits[trait] = traits[trait] - 10;
+        }
+        return await this.careerWeightageRepo.getCareersForTraits(traits);
     }
 }
