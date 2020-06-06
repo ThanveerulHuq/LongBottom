@@ -11,27 +11,27 @@ export class CareerWeightage {
     @ManyToOne(type => Career)
     @JoinColumn({ name: 'career' })
     public career: Career;
-    
+
     @IsNotEmpty()
     @Column({ name: 'doer' })
     public doer: number;
-    
+
     @IsNotEmpty()
     @Column({ name: 'creator' })
     public creator: number;
-    
+
     @IsNotEmpty()
     @Column({ name: 'persuader' })
     public persuader: number;
-    
+
     @IsNotEmpty()
     @Column({ name: 'thinker' })
     public thinker: number;
-    
+
     @IsNotEmpty()
     @Column({ name: 'helper' })
     public helper: number;
-    
+
     @IsNotEmpty()
     @Column({ name: 'organizer' })
     public organizer: number;

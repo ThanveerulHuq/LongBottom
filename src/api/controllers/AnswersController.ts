@@ -2,7 +2,7 @@ import { JsonController, Post, Body } from 'routing-controllers';
 import { AnswersService } from '../services/AnswersService';
 
 @JsonController('/answers')
-export class QuestionController {
+export class AnsewersController {
 
     constructor(private answersService: AnswersService) { }
 

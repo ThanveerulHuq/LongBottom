@@ -12,7 +12,7 @@ export class StudentController {
     }
 
     @Post('/addStudent')
-    public addStudent(@Body() body: any):any {
+    public addStudent(@Body() body: any): any {
         console.log(body);
         return this.stduentService.addStudent(body);
     }
